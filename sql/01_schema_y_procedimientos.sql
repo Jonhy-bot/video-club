@@ -247,7 +247,8 @@ CREATE PROCEDURE sp_ListarVideojuegosDisponiblesPorSucursal(
 BEGIN
     SELECT DISTINCT v.Codigo, v.Nombre, v.Desarrollador, c.Nombre AS NombreCategoria
     FROM VIDEOJUEGO v
-    INNER JOIN COPIA cp ON v.Codigo = cp.CodigoVideojuego
+    INNER JOIN COPIA     cp ON v.Codigo      = cp.CodigoVideojuego
+    INNER JOIN CATEGORIA c  ON v.IdCategoria = c.Id
     WHERE cp.NumeroSucursal = p_NumeroSucursal
       AND cp.Disponibilidad = 'S'
     ORDER BY v.Nombre;
