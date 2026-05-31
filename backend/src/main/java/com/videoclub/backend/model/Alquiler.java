@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Alquiler {
-    // campos que retornan sp_ListarAlquileresActivosPorCliente y sp_ListarHistorialAlquileresPorCliente
     private Integer secuencia;
     private LocalDateTime fechaPrestamo;
     private Integer cantidadDias;
@@ -21,9 +20,4 @@ public class Alquiler {
     private String nombreSucursal;
     private LocalDateTime fechaDevolucion;
     private String detalleDevolucion;
-    // para sp_InsertarAlquiler
-    private String cedulaCliente;
-    private Integer codigoJuego;
-    // para sp_RegresarVideojuego
-    private String detalle;
 }

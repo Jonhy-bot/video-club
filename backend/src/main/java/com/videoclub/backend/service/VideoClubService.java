@@ -1,12 +1,17 @@
 package com.videoclub.backend.service;
 
+import com.videoclub.backend.dto.request.*;
+import com.videoclub.backend.exception.NotFoundException;
+import com.videoclub.backend.exception.ServiceException;
 import com.videoclub.backend.model.*;
 import com.videoclub.backend.repository.VideoClubRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class VideoClubService {
 
@@ -16,200 +21,110 @@ public class VideoClubService {
         this.repository = repository;
     }
 
-    private void validarMensaje(String mensaje) {
-        if (mensaje != null && mensaje.startsWith("ERROR")) {
-            throw new RuntimeException(mensaje);
-        }
-    }
-
     // ---- CLIENTES ----
 
     public List<Cliente> listarClientes() {
-        try {
-            return repository.listarClientes();
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Error al listar clientes: " + e.getMessage(), e);
-        }
+        return repository.listarClientes();
     }
 
-    public String insertarCliente(Cliente cliente) {
-        try {
-            String mensaje = repository.insertarCliente(
-                cliente.getCedula(), cliente.getNombre(), cliente.getApellido(),
-                cliente.getTelefono(), cliente.getCorreo(), cliente.getDireccion()
-            );
-            validarMensaje(mensaje);
-            return mensaje;
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Error al insertar cliente: " + e.getMessage(), e);
-        }
+    public String insertarCliente(ClienteRequest req) {
+        log.info("Insertando cliente con cédula: {}", req.getCedula());
+        String mensaje = repository.insertarCliente(
+                req.getCedula(), req.getNombre(), req.getApellido(),
+                req.getTelefono(), req.getCorreo(), req.getDireccion());
+        validarMensaje(mensaje);
+        return mensaje;
     }
 
     public Cliente obtenerClientePorCedula(String cedula) {
-        try {
-            return repository.obtenerClientePorCedula(cedula)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con cédula: " + cedula));
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Error al obtener cliente: " + e.getMessage(), e);
-        }
+        return repository.obtenerClientePorCedula(cedula)
+                .orElseThrow(() -> new NotFoundException("Cliente no encontrado con cédula: " + cedula));
     }
 
     // ---- CATEGORIAS ----
 
     public List<Categoria> listarCategorias() {
-        try {
-            return repository.listarCategorias();
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Error al listar categorías: " + e.getMessage(), e);
-        }
+        return repository.listarCategorias();
     }
 
     // ---- SUCURSALES ----
 
     public List<Sucursal> listarSucursales() {
-        try {
-            return repository.listarSucursales();
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Error al listar sucursales: " + e.getMessage(), e);
-        }
+        return repository.listarSucursales();
     }
 
     // ---- VIDEOJUEGOS ----
 
     public List<Videojuego> listarVideojuegos() {
-        try {
-            return repository.listarVideojuegos();
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Error al listar videojuegos: " + e.getMessage(), e);
-        }
+        return repository.listarVideojuegos();
     }
 
-    public String insertarVideojuego(Videojuego videojuego) {
-        try {
-            String mensaje = repository.insertarVideojuego(
-                videojuego.getCodigo(), videojuego.getNombre(), videojuego.getDescripcion(),
-                videojuego.getDesarrollador(), videojuego.getFechaLanzamiento(),
-                videojuego.getIdCategoria()
-            );
-            validarMensaje(mensaje);
-            return mensaje;
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Error al insertar videojuego: " + e.getMessage(), e);
-        }
+    public String insertarVideojuego(VideojuegoRequest req) {
+        log.info("Insertando videojuego con código: {}", req.getCodigo());
+        String mensaje = repository.insertarVideojuego(
+                req.getCodigo(), req.getNombre(), req.getDescripcion(),
+                req.getDesarrollador(), req.getFechaLanzamiento(), req.getIdCategoria());
+        validarMensaje(mensaje);
+        return mensaje;
     }
 
     public List<Videojuego> listarVideojuegosDisponiblesPorSucursal(Integer numeroSucursal) {
-        try {
-            return repository.listarVideojuegosDisponiblesPorSucursal(numeroSucursal);
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Error al listar videojuegos disponibles: " + e.getMessage(), e);
-        }
+        return repository.listarVideojuegosDisponiblesPorSucursal(numeroSucursal);
     }
 
     // ---- COPIAS ----
 
-    public String insertarCopia(Copia copia) {
-        try {
-            String mensaje = repository.insertarCopia(
-                copia.getCodigoVideojuego(), copia.getNumeroSucursal(), copia.getEstado()
-            );
-            validarMensaje(mensaje);
-            return mensaje;
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Error al insertar copia: " + e.getMessage(), e);
-        }
+    public String insertarCopia(CopiaNuevaRequest req) {
+        log.info("Insertando copia del videojuego {} en sucursal {}", req.getCodigoVideojuego(), req.getNumeroSucursal());
+        String mensaje = repository.insertarCopia(
+                req.getCodigoVideojuego(), req.getNumeroSucursal(), req.getEstado());
+        validarMensaje(mensaje);
+        return mensaje;
     }
 
     public List<Copia> listarCopiasDisponiblesPorSucursal(Integer numeroSucursal) {
-        try {
-            return repository.listarCopiasDisponiblesPorSucursal(numeroSucursal);
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Error al listar copias disponibles: " + e.getMessage(), e);
-        }
+        return repository.listarCopiasDisponiblesPorSucursal(numeroSucursal);
     }
 
-    public String trasladarCopia(Copia copia) {
-        try {
-            String mensaje = repository.trasladarCopia(
-                copia.getConsecutivo(), copia.getSucursalDestino(), copia.getComentarios()
-            );
-            validarMensaje(mensaje);
-            return mensaje;
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Error al trasladar copia: " + e.getMessage(), e);
-        }
+    public String trasladarCopia(TrasladoRequest req) {
+        log.info("Trasladando copia {} a sucursal {}", req.getConsecutivoCopia(), req.getSucursalDestino());
+        String mensaje = repository.trasladarCopia(
+                req.getConsecutivoCopia(), req.getSucursalDestino(), req.getComentarios());
+        validarMensaje(mensaje);
+        return mensaje;
     }
 
     // ---- ALQUILERES ----
 
-    public Map<String, Object> insertarAlquiler(Alquiler alquiler) {
-        try {
-            Map<String, Object> resultado = repository.insertarAlquiler(
-                alquiler.getCedulaCliente(), alquiler.getCodigoJuego(),
-                alquiler.getNumeroSucursal(), alquiler.getCantidadDias()
-            );
-            validarMensaje((String) resultado.get("Mensaje"));
-            return resultado;
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Error al registrar alquiler: " + e.getMessage(), e);
-        }
+    public Map<String, Object> insertarAlquiler(AlquilerRequest req) {
+        log.info("Registrando alquiler para cliente {} en sucursal {}", req.getCedulaCliente(), req.getNumeroSucursal());
+        Map<String, Object> raw = repository.insertarAlquiler(
+                req.getCedulaCliente(), req.getCodigoJuego(),
+                req.getNumeroSucursal(), req.getCantidadDias());
+        validarMensaje(String.valueOf(raw.get("Mensaje")));
+        return Map.of(
+                "secuenciaAlquiler", raw.get("SecuenciaAlquiler"),
+                "mensaje", raw.get("Mensaje"));
     }
 
     public List<Alquiler> listarAlquileresActivosPorCliente(String cedulaCliente) {
-        try {
-            return repository.listarAlquileresActivosPorCliente(cedulaCliente);
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Error al listar alquileres activos: " + e.getMessage(), e);
-        }
+        return repository.listarAlquileresActivosPorCliente(cedulaCliente);
     }
 
-    public String regresarVideojuego(Alquiler alquiler) {
-        try {
-            String mensaje = repository.regresarVideojuego(
-                alquiler.getSecuencia(), alquiler.getDetalle()
-            );
-            validarMensaje(mensaje);
-            return mensaje;
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Error al registrar devolución: " + e.getMessage(), e);
-        }
+    public String regresarVideojuego(DevolucionRequest req) {
+        log.info("Registrando devolución del alquiler #{}", req.getSecuencia());
+        String mensaje = repository.regresarVideojuego(req.getSecuencia(), req.getDetalle());
+        validarMensaje(mensaje);
+        return mensaje;
     }
 
     public List<Alquiler> listarHistorialAlquileresPorCliente(String cedulaCliente) {
-        try {
-            return repository.listarHistorialAlquileresPorCliente(cedulaCliente);
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Error al listar historial de alquileres: " + e.getMessage(), e);
+        return repository.listarHistorialAlquileresPorCliente(cedulaCliente);
+    }
+
+    private void validarMensaje(String mensaje) {
+        if (mensaje != null && mensaje.startsWith("ERROR")) {
+            throw new ServiceException(mensaje);
         }
     }
 }

@@ -16,5 +16,4 @@ public class Videojuego {
     private String desarrollador;
     private LocalDate fechaLanzamiento;
     private String nombreCategoria;
-    private Integer idCategoria;
 }

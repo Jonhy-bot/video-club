@@ -9,11 +9,10 @@ services:
       MYSQL_USER: videoclub_user
       MYSQL_PASSWORD: videoclub1234
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - videoclub_data:/var/lib/mysql
       - ./sql:/docker-entrypoint-initdb.d
-    command: --default-authentication-plugin=mysql_native_password
 
 volumes:
   videoclub_data:
