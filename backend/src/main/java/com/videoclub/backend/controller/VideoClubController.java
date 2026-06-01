@@ -91,6 +91,11 @@ public class VideoClubController {
 
     // ---- ALQUILERES ----
 
+    @GetMapping("/alquileres")
+    public ResponseEntity<List<Alquiler>> listarAlquileresActivos() {
+        return ResponseEntity.ok(service.listarAlquileres());
+    }
+
     @PostMapping("/alquileres")
     public ResponseEntity<Map<String, Object>> insertarAlquiler(@Valid @RequestBody AlquilerRequest req) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.insertarAlquiler(req));

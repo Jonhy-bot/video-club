@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
+import org.springframework.jdbc.core.namedparam.EmptySqlParameterSource;
 
 import java.sql.Date;
 import java.sql.Types;
@@ -222,6 +223,15 @@ public class VideoClubRepository {
             .declareParameters(new SqlParameter("p_CedulaCliente", Types.CHAR))
             .returningResultSet("alquileres", new BeanPropertyRowMapper<>(Alquiler.class));
         Map<String, Object> out = call.execute(new MapSqlParameterSource("p_CedulaCliente", cedulaCliente));
+        return (List<Alquiler>) out.get("alquileres");
+    }
+
+    public List<Alquiler> listarAlquileres() {
+        SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate)
+                .withoutProcedureColumnMetaDataAccess()
+                .withProcedureName("sp_ObtenerAlquileres")
+                .returningResultSet("alquileres", new BeanPropertyRowMapper<>(Alquiler.class));
+        Map<String, Object> out = call.execute(EmptySqlParameterSource.INSTANCE);
         return (List<Alquiler>) out.get("alquileres");
     }
 

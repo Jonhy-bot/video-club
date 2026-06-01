@@ -232,6 +232,12 @@ END$$
 
 -- MODULO ALQUILERES
 
+CREATE PROCEDURE sp_ObtenerAlquileres()
+BEGIN
+    SELECT *
+    FROM ALQUILER;
+END$$
+
 CREATE PROCEDURE sp_ObtenerClientePorCedula(
     IN p_Cedula CHAR(9)
 )

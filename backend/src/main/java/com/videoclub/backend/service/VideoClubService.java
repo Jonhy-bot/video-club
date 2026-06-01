@@ -111,6 +111,10 @@ public class VideoClubService {
         return repository.listarAlquileresActivosPorCliente(cedulaCliente);
     }
 
+    public List<Alquiler> listarAlquileres() {
+        return repository.listarAlquileres();
+    }
+
     public String regresarVideojuego(DevolucionRequest req) {
         log.info("Registrando devolución del alquiler #{}", req.getSecuencia());
         String mensaje = repository.regresarVideojuego(req.getSecuencia(), req.getDetalle());
